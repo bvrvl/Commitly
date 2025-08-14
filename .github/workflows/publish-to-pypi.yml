@@ -1,0 +1,39 @@
+name: Publish Python Package to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger this workflow on version tags like v0.1.0, v1.2.3
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      # This step checks out your repository's code into the runner.
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+      # This step sets up a specific Python version.
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+        pip install twine
+      # This step installs the build and upload tools.
+
+    - name: Build package
+      run: python -m build
+      # This builds your package into the dist/ folder.
+
+    - name: Publish package
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        twine upload dist/*
+      # This securely uploads the built package to PyPI using the token from your GitHub Secrets.
