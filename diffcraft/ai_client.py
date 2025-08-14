@@ -11,7 +11,7 @@ def configure_api():
 
     if not api_key:
         # This is the new, more helpful message
-        print("--- Welcome to LogCraft! API Key Not Found ---")
+        print("--- Welcome to DiffCraft! API Key Not Found ---")
         print("\nPlease choose one of the following methods to configure your Gemini API key:")
         print("\nMethod 1: Use a .env file (Recommended for local projects)")
         print("  1. Create a file named .env in your project's root directory.")

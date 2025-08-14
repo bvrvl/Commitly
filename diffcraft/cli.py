@@ -3,7 +3,7 @@ from .main import run
 
 def main():
     """
-    The main entry point for the LogCraft CLI.
+    The main entry point for the DiffCraft CLI.
     """
     epilog_text = """
 Examples:
@@ -21,7 +21,7 @@ Find more information or contribute at the project repository.
 
     parser = argparse.ArgumentParser(
         prog="craft",
-        description="🚀 LogCraft: Your AI-powered git commit assistant.",
+        description="🚀 DiffCraft: Your AI-powered git commit assistant.",
         epilog=epilog_text,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
