@@ -34,3 +34,24 @@ def get_staged_diff():
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while running git diff: {e.stderr}")
         sys.exit(1)
+
+
+def commit(message: str):
+    """
+    Commits the staged changes with the given message.
+
+    Args:
+        message (str): The commit message.
+    """
+    try:
+        # Using -m flag expects the entire message as a single argument.
+        # For multi-line messages, we pass it as one string.
+        subprocess.run(
+            ["git", "commit", "-m", message],
+            check=True,
+            encoding='utf-8'
+        )
+        print("✅ Commit created successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during commit: {e.stderr}", file=sys.stderr)
+        sys.exit(1)
