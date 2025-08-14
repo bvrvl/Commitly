@@ -96,3 +96,18 @@ def get_commit_history(n: int):
         # Silently fail if git log fails, it's not a critical error
         print("Warning: Could not retrieve commit history.")
         return None
+
+def add_files(files: list):
+    """
+    Runs `git add` on the specified list of files.
+
+    Args:
+        files (list): A list of file paths to stage.
+    """
+    try:
+        command = ["git", "add"] + files
+        subprocess.run(command, check=True, capture_output=True, text=True)
+        print(f"Staged {len(files)} file(s).")
+    except subprocess.CalledProcessError as e:
+        print(f"Error staging files: {e.stderr}")
+        sys.exit(1)

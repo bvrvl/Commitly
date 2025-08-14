@@ -1,8 +1,7 @@
-from .git_utils import get_staged_diff, commit
+import sys
+from .git_utils import get_staged_diff, commit, get_commit_history, add_files
 from .ai_client import generate_commit_message
 from .editor import open_in_editor
-from .git_utils import get_staged_diff, commit, get_commit_history
-import sys
 
 def get_user_choice():
     """Prompts the user for their choice and returns it."""
@@ -16,11 +15,17 @@ def run(args):
     """
     Main function to run the commit message generation and interaction process.
     """
+    # If file paths are provided as arguments, stage them first.
+    if args.files:
+        add_files(args.files)
+
+    # Get the diff of all currently staged changes.
     diff = get_staged_diff()
     if not diff:
-        print("Exiting.")
+        print("No changes to commit. Use 'craft .' or 'git add <files>' to stage changes.")
         sys.exit(0)
 
+    # Get commit history if requested by the user.
     commit_history = get_commit_history(args.history)
 
     commit_message = None
@@ -62,4 +67,4 @@ def run(args):
             continue
         elif choice == 'Q':
             print("Commit aborted by user.")
-            break # Exit the loop
+            break

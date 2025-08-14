@@ -7,14 +7,14 @@ def main():
     """
     epilog_text = """
 Examples:
+  craft .
+      Stage all changes and generate a commit message.
+
+  craft src/main.py src/utils.py
+      Stage specific files and generate a commit message.
+
   craft
-      Generate a commit message interactively.
-
-  craft -t fix -e
-      Generate a 'fix' type commit and open it directly in your editor.
-
-  craft --lang Spanish --history 3
-      Generate a message in Spanish using the last 3 commits as context.
+      Generate a commit for changes already staged with 'git add'.
 
 Find more information or contribute at the project repository.
 """
@@ -24,6 +24,12 @@ Find more information or contribute at the project repository.
         description="🚀 DiffCraft: Your AI-powered git commit assistant.",
         epilog=epilog_text,
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    
+    parser.add_argument(
+        'files',
+        nargs='*', # Captures zero or more file paths
+        help="Optional: File(s) to stage before generating a commit. Use '.' for all."
     )
 
     gen_group = parser.add_argument_group('Generation Options')
@@ -35,7 +41,6 @@ Find more information or contribute at the project repository.
         choices=['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
         help="Specify the commit type. If omitted, the AI will auto-detect."
     )
-
     gen_group.add_argument(
         '--lang',
         type=str,
@@ -43,13 +48,11 @@ Find more information or contribute at the project repository.
         metavar='LANGUAGE',
         help="Set the output language for the message (e.g., 'Spanish', 'Japanese')."
     )
-
     flow_group.add_argument(
         '-e', '--edit',
         action='store_true',
         help="Bypass the interactive prompt and open the message directly in your editor."
     )
-
     flow_group.add_argument(
         '--history',
         type=int,
