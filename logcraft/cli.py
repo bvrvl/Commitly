@@ -3,25 +3,25 @@ from .main import run
 
 def main():
     """
-    The main entry point for the Git-Scribe CLI.
+    The main entry point for the LogCraft CLI.
     """
     epilog_text = """
 Examples:
-  scribe
+  craft
       Generate a commit message interactively.
 
-  scribe -t fix -e
+  craft -t fix -e
       Generate a 'fix' type commit and open it directly in your editor.
 
-  scribe --lang Spanish --history 3
+  craft --lang Spanish --history 3
       Generate a message in Spanish using the last 3 commits as context.
 
 Find more information or contribute at the project repository.
 """
 
     parser = argparse.ArgumentParser(
-        prog="scribe",
-        description="🚀 Git-Scribe: Your AI-powered git commit assistant.",
+        prog="craft",
+        description="🚀 LogCraft: Your AI-powered git commit assistant.",
         epilog=epilog_text,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
