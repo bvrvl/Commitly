@@ -5,3 +5,6 @@ __pycache__/
 scrap.txt
 en.txt
 combined.txt
+
+.env
+
