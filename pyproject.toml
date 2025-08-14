@@ -4,18 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DiffCraft"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
 
   { name="Saurabh Baral (bvrvl)", email="saurabh@bvrvl.com" },
 ]
-description = "AI-powered CLI for generating git commit messages."
+description = "AI-powered CLI tool for generating git commit messages."
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "google-generativeai",
+    "python-dotenv",
 ]
 
 [project.scripts]
