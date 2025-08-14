@@ -3,18 +3,26 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 def configure_api():
-    """Loads API key from .env and configures the Gemini API."""
-    load_dotenv()
+    """Loads API key from .env or environment and configures the Gemini API."""
+    load_dotenv() # This will load the .env file if it exists
+    
+    # os.getenv() automatically checks for system environment variables first
     api_key = os.getenv("GEMINI_API_KEY")
 
     if not api_key:
-        # This is the friendly message for new users
-        print("--- Welcome to Git-Scribe! ---")
-        print("To get started, you need a Gemini API key.")
-        print("1. Get your key from Google AI Studio: https://aistudio.google.com/app/apikey")
-        print("2. In your project's root directory, create a file named .env")
-        print("3. Add the following line to the .env file, replacing with your actual key:")
-        print("\nGEMINI_API_KEY=\"YOUR_API_KEY_HERE\"\n")
+        # This is the new, more helpful message
+        print("--- Welcome to Scribe! API Key Not Found ---")
+        print("\nPlease choose one of the following methods to configure your Gemini API key:")
+        print("\nMethod 1: Use a .env file (Recommended for local projects)")
+        print("  1. Create a file named .env in your project's root directory.")
+        print("  2. Add this line, replacing with your actual key:")
+        print("     GEMINI_API_KEY=\"YOUR_API_KEY_HERE\"")
+        
+        print("\nMethod 2: Use an Environment Variable (For advanced users or servers)")
+        print("  - For macOS/Linux, run: export GEMINI_API_KEY=\"YOUR_API_KEY_HERE\"")
+        print("  - For Windows CMD, run: set GEMINI_API_KEY=\"YOUR_API_KEY_HERE\"")
+        
+        print("\nGet your free key from Google AI Studio: https://aistudio.google.com/app/apikey\n")
         raise ValueError("API key configuration not found.")
 
     genai.configure(api_key=api_key)
