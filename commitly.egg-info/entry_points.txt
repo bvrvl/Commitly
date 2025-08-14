@@ -1,2 +1,0 @@
-[console_scripts]
-commitly = commitly.cli:main

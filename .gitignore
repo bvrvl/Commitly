@@ -1,4 +1,5 @@
 .venv/
+venv/
 __pycache__/
 
 # Development Scrap
@@ -8,3 +9,5 @@ combined.txt
 
 .env
 
+dist/
+*.egg-info
