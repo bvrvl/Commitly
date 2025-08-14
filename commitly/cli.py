@@ -5,36 +5,60 @@ def main():
     """
     The main entry point for the Commitly CLI.
     """
+    epilog_text = """
+Examples:
+  commitly
+      Generate a commit message interactively.
+
+  commitly -t fix -e
+      Generate a 'fix' type commit and open it directly in your editor.
+
+  commitly --lang Spanish --history 3
+      Generate a message in Spanish using the last 3 commits as context.
+
+Find more information or contribute at the project repository.
+"""
+
     parser = argparse.ArgumentParser(
-        description="Generate a Git commit message using AI."
+        prog="commitly",
+        description="🚀 Commitly: Your AI-powered git commit assistant.",
+        epilog=epilog_text,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument(
-        '--edit',
-        '-e',
-        action='store_true',
-        help="Open the generated message in your default editor before committing."
-    )
-    parser.add_argument(
-        '--type',
-        '-t',
+
+    gen_group = parser.add_argument_group('Generation Options')
+    flow_group = parser.add_argument_group('Workflow Options')
+
+    gen_group.add_argument(
+        '-t', '--type',
         type=str,
         choices=['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
-        help="Force a specific commit type for the message."
+        help="Specify the commit type. If omitted, the AI will auto-detect."
     )
-    parser.add_argument(
-        '--history',
-        type=int,
-        default=0,
-        help="Include the last N commits in the prompt for context."
-    )
-    parser.add_argument(
+
+    gen_group.add_argument(
         '--lang',
         type=str,
         default='English',
-        help="Specify the output language for the commit message."
+        metavar='LANGUAGE',
+        help="Set the output language for the message (e.g., 'Spanish', 'Japanese')."
     )
-    args = parser.parse_args()
 
+    flow_group.add_argument(
+        '-e', '--edit',
+        action='store_true',
+        help="Bypass the interactive prompt and open the message directly in your editor."
+    )
+
+    flow_group.add_argument(
+        '--history',
+        type=int,
+        default=0,
+        metavar='N',
+        help="Provide the last N commit messages to the AI for better context."
+    )
+
+    args = parser.parse_args()
     run(args)
 
 if __name__ == "__main__":

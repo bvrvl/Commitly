@@ -7,10 +7,10 @@ import sys
 def get_user_choice():
     """Prompts the user for their choice and returns it."""
     while True:
-        choice = input("Accept, Edit, or Regenerate? [A/E/R]: ").upper()
-        if choice in ['A', 'E', 'R']:
+        choice = input("Accept, Edit, Regenerate, or Quit? [A/E/R/Q]: ").upper()
+        if choice in ['A', 'E', 'R', 'Q']:
             return choice
-        print("Invalid choice. Please enter 'A', 'E', or 'R'.")
+        print("Invalid choice. Please enter 'A', 'E', 'R', or 'Q'.")
 
 def run(args):
     """
@@ -21,7 +21,6 @@ def run(args):
         print("Exiting.")
         sys.exit(0)
 
-    # Get history if requested
     commit_history = get_commit_history(args.history)
 
     commit_message = None
@@ -30,15 +29,12 @@ def run(args):
     while True:
         if not commit_message:
             print("⏳ Generating commit message with AI...")
-            
-            # Pass all arguments to the AI client
             commit_message = generate_commit_message(
                 diff,
                 commit_type=args.type,
                 history=commit_history,
                 language=args.lang
             )
-
             print("\nSuggested commit:\n")
             print("----------------------------------------")
             print(commit_message)
@@ -64,3 +60,6 @@ def run(args):
         elif choice == 'E':
             is_editing_flow = True
             continue
+        elif choice == 'Q':
+            print("Commit aborted by user.")
+            break # Exit the loop
