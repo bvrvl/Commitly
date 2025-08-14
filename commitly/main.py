@@ -1,4 +1,5 @@
 from .git_utils import get_staged_diff
+from .ai_client import generate_commit_message
 
 def run():
     """
@@ -7,9 +8,12 @@ def run():
     diff = get_staged_diff()
 
     if diff:
-        print("----- Staged Diff -----")
-        print(diff)
-        print("-----------------------")
+        print("⏳ Generating commit message with AI...")
+        commit_message = generate_commit_message(diff)
+        print("\nSuggested commit:\n")
+        print("----------------------------------------")
+        print(commit_message)
+        print("----------------------------------------")
     else:
         print("Exiting.")
 
