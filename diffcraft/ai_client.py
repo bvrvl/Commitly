@@ -25,7 +25,7 @@ def generate_commit_message(
     language: str = 'English'
 ) -> str:
     """
-    Generates a Git commit message using Gemini-2.5-Flash with thinking disabled.
+    Generates a Git commit message using Gemini-2.5-Flash-Lite with thinking disabled.
     """
     client = configure_api()
 
@@ -52,7 +52,7 @@ def generate_commit_message(
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite", # Highest RPD for free tier;
             contents=prompt,
             config=types.GenerateContentConfig(
                 thinking_config=types.ThinkingConfig(thinking_budget=0)  # disables thinking
