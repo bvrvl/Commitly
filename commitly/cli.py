@@ -10,13 +10,19 @@ def main():
     )
     parser.add_argument(
         '--edit',
-        '-e', # Add a convenient shortcut
-        action='store_true', # Makes it a flag, e.g., `commitly --edit`
+        '-e',
+        action='store_true',
         help="Open the generated message in your default editor before committing."
+    )
+    parser.add_argument(
+        '--type',
+        '-t',
+        type=str,
+        choices=['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
+        help="Force a specific commit type for the message."
     )
     args = parser.parse_args()
 
-    # Pass the parsed arguments to the main run function
     run(args)
 
 if __name__ == "__main__":

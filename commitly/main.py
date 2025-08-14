@@ -26,7 +26,11 @@ def run(args):
     while True:
         if not commit_message:
             print("⏳ Generating commit message with AI...")
-            commit_message = generate_commit_message(diff)
+            # Get the type from args. It will be None if not provided.
+            forced_type = args.type
+            # Pass it to the AI client
+            commit_message = generate_commit_message(diff, commit_type=forced_type)
+
             print("\nSuggested commit:\n")
             print("----------------------------------------")
             print(commit_message)

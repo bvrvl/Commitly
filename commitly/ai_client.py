@@ -10,12 +10,13 @@ def configure_api():
         raise ValueError("GEMINI_API_KEY not found. Please set it in your .env file.")
     genai.configure(api_key=api_key)
 
-def generate_commit_message(diff: str) -> str:
+def generate_commit_message(diff: str, commit_type: str = None) -> str:
     """
     Generates a commit message using the Gemini API.
 
     Args:
         diff (str): The staged git diff.
+        commit_type (str, optional): The type of commit to generate.
 
     Returns:
         str: The generated commit message.
@@ -23,14 +24,21 @@ def generate_commit_message(diff: str) -> str:
     configure_api()
     model = genai.GenerativeModel('gemini-1.5-flash')
 
+    # Dynamically change the main instruction based on whether a type was provided
+    if commit_type:
+        prompt_instruction = f"Your task is to write a high-quality Git commit message with the type '{commit_type}'."
+    else:
+        prompt_instruction = "Your task is to write a high-quality Git commit message, automatically detecting the correct type from the following list: feat, fix, docs, style, refactor, test, chore."
+
     prompt = f"""
-    As an expert software developer, your task is to write a high-quality Git commit message.
+    As an expert software developer, {prompt_instruction}
     Analyze the following git diff and generate a concise, professional commit message that follows the Conventional Commits specification.
 
-    The commit message should have a clear and succinct title (max 50 chars).
+    The commit message must start with the type, followed by a colon and a space.
+    The title should be succinct (max 50 chars).
     If necessary, provide an optional body explaining the 'what' and 'why' of the changes.
 
-    Do not include any explanatory text like "Here is the commit message:", backticks, or the 'git commit -m' command itself.
+    Do not include any extra text, commentary, or the 'git commit -m' command.
 
     Git Diff:
     ```diff
@@ -40,7 +48,6 @@ def generate_commit_message(diff: str) -> str:
 
     try:
         response = model.generate_content(prompt)
-        # Clean up the response to ensure it's just the message.
         return response.text.strip()
     except Exception as e:
         return f"Error generating commit message: {e}"
