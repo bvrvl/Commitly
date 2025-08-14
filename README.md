@@ -11,16 +11,6 @@ Install:
 pip install diffcraft
 ```
 
----
-
-### ► See it in Action
-
-*(It's highly recommended you record a short GIF of your tool and replace the placeholder URL below. You can use free tools like [Giphy Capture](https://giphy.com/apps/giphycapture) or [Kap](https://getkap.co/).)*
-
-![DiffCraft Demo GIF](https://user-images.githubusercontent.com/12345/your-demo-image-url.gif)
-
----
-
 ## Features:
 
 *   🤖 **AI-Powered Commits:** Analyzes your `git diff` to create meaningful and descriptive commit messages that truly reflect your changes.
