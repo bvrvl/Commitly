@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DiffCraft"
-version = "0.2.4"
+version = "0.2.5"
 authors = [
 
   { name="Saurabh Baral (bvrvl)", email="saurabh@bvrvl.com" },
@@ -19,7 +19,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "google-generativeai",
+    "google-genai",
     "python-dotenv",
 ]
 
