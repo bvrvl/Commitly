@@ -3,6 +3,7 @@
 
 [![PyPI version](https://badge.fury.io/py/diffcraft.svg)](https://badge.fury.io/py/diffcraft)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-purple?logo=github)](https://github.com/bvrvl/diffcraft)
 
 DiffCraft is a smart command-line tool that uses Google's Gemini to instantly generate high-quality, conventional commit messages from your staged code changes.
 
@@ -82,6 +83,11 @@ craft
 ```
 This will generate a commit message and present you with the interactive prompt.
 
+Or,
+```Bash
+craft .
+```
+This will both stage the files and generate a commit message.
 ### Command-Line Options
 For a full list of commands and detailed explanations, use the `--help` flag:
 ```Bash
