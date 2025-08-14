@@ -21,6 +21,18 @@ def main():
         choices=['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
         help="Force a specific commit type for the message."
     )
+    parser.add_argument(
+        '--history',
+        type=int,
+        default=0,
+        help="Include the last N commits in the prompt for context."
+    )
+    parser.add_argument(
+        '--lang',
+        type=str,
+        default='English',
+        help="Specify the output language for the commit message."
+    )
     args = parser.parse_args()
 
     run(args)

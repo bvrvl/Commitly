@@ -1,6 +1,7 @@
 from .git_utils import get_staged_diff, commit
 from .ai_client import generate_commit_message
 from .editor import open_in_editor
+from .git_utils import get_staged_diff, commit, get_commit_history
 import sys
 
 def get_user_choice():
@@ -20,16 +21,23 @@ def run(args):
         print("Exiting.")
         sys.exit(0)
 
+    # Get history if requested
+    commit_history = get_commit_history(args.history)
+
     commit_message = None
     is_editing_flow = args.edit
 
     while True:
         if not commit_message:
             print("⏳ Generating commit message with AI...")
-            # Get the type from args. It will be None if not provided.
-            forced_type = args.type
-            # Pass it to the AI client
-            commit_message = generate_commit_message(diff, commit_type=forced_type)
+            
+            # Pass all arguments to the AI client
+            commit_message = generate_commit_message(
+                diff,
+                commit_type=args.type,
+                history=commit_history,
+                language=args.lang
+            )
 
             print("\nSuggested commit:\n")
             print("----------------------------------------")

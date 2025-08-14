@@ -10,13 +10,15 @@ def configure_api():
         raise ValueError("GEMINI_API_KEY not found. Please set it in your .env file.")
     genai.configure(api_key=api_key)
 
-def generate_commit_message(diff: str, commit_type: str = None) -> str:
+def generate_commit_message(diff: str, commit_type: str = None, history: str = None, language: str = 'English') -> str:
     """
     Generates a commit message using the Gemini API.
 
     Args:
         diff (str): The staged git diff.
         commit_type (str, optional): The type of commit to generate.
+        history (str, optional): A string of recent commit messages.
+        language (str, optional): The target language for the message.
 
     Returns:
         str: The generated commit message.
@@ -24,27 +26,28 @@ def generate_commit_message(diff: str, commit_type: str = None) -> str:
     configure_api()
     model = genai.GenerativeModel('gemini-1.5-flash')
 
-    # Dynamically change the main instruction based on whether a type was provided
+    # Build the prompt dynamically
+    prompt_parts = [
+        "As an expert software developer, your task is to write a high-quality Git commit message."
+    ]
     if commit_type:
-        prompt_instruction = f"Your task is to write a high-quality Git commit message with the type '{commit_type}'."
+        prompt_parts.append(f"The commit message must have the type '{commit_type}'.")
     else:
-        prompt_instruction = "Your task is to write a high-quality Git commit message, automatically detecting the correct type from the following list: feat, fix, docs, style, refactor, test, chore."
+        prompt_parts.append("Automatically detect the correct commit type from this list: feat, fix, docs, style, refactor, test, chore.")
 
-    prompt = f"""
-    As an expert software developer, {prompt_instruction}
-    Analyze the following git diff and generate a concise, professional commit message that follows the Conventional Commits specification.
+    prompt_parts.append(f"The commit message must be written in {language}.")
+    prompt_parts.append("Analyze the following git diff and generate a concise, professional commit message that follows the Conventional Commits specification.")
+    
+    if history:
+        prompt_parts.append("\nFor context, here are the last few commit messages:")
+        prompt_parts.append(f"```\n{history}\n```")
 
-    The commit message must start with the type, followed by a colon and a space.
-    The title should be succinct (max 50 chars).
-    If necessary, provide an optional body explaining the 'what' and 'why' of the changes.
+    prompt_parts.append("\nGit Diff:")
+    prompt_parts.append(f"```diff\n{diff}\n```")
 
-    Do not include any extra text, commentary, or the 'git commit -m' command.
+    prompt_parts.append("\nDo not include any extra text, commentary, or the 'git commit -m' command in your response. Just provide the raw commit message.")
 
-    Git Diff:
-    ```diff
-    {diff}
-    ```
-    """
+    prompt = "\n".join(prompt_parts)
 
     try:
         response = model.generate_content(prompt)

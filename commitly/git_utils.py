@@ -66,3 +66,33 @@ def get_git_editor():
     except (FileNotFoundError, subprocess.CalledProcessError):
         # Fallback if git command fails or variable is not set
         return os.environ.get('EDITOR', 'vim' if os.name != 'nt' else 'notepad')
+    
+
+def get_commit_history(n: int):
+    """
+    Retrieves the subject lines of the last n commits.
+
+    Args:
+        n (int): The number of commits to retrieve.
+
+    Returns:
+        str: A formatted string of the last n commit subjects, or None.
+    """
+    if n <= 0:
+        return None
+    try:
+        command = ["git", "log", f"-{n}", "--pretty=format:%s"]
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding='utf-8'
+        )
+        if result.stdout:
+            return result.stdout
+        return None
+    except Exception:
+        # Silently fail if git log fails, it's not a critical error
+        print("Warning: Could not retrieve commit history.")
+        return None
