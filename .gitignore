@@ -6,6 +6,7 @@ __pycache__/
 scrap.txt
 en.txt
 combined.txt
+interactive_test.txt
 
 .env
 
