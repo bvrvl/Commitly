@@ -52,6 +52,7 @@ Remember to add the .env file to your project's .gitignore to ensure your secret
 This method is ideal for servers, CI/CD pipelines, Docker containers, or any user who prefers to manage API keys globally.
 DiffCraft will always prioritize a system-wide environment variable over a local .env file.
 Open your terminal and use the appropriate command for your operating system.
+
 **macOS / Linux**
 ```Bash
 export GEMINI_API_KEY="YOUR_API_KEY_HERE"
