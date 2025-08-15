@@ -2,6 +2,7 @@ import os
 import sys
 import datetime
 import requests
+import fnmatch
 from .ai_client import configure_api, generate_commit_message # Re-using the AI client
 
 POPULAR_LICENSES = {
@@ -168,33 +169,62 @@ def _strip_markdown_fences(text: str) -> str:
     # If no fences are found, return the original (but stripped) text
     return text.strip()
 
+def _parse_gitignore(gitignore_content: str) -> set:
+    """Parses gitignore content into a set of patterns."""
+    patterns = set()
+    for line in gitignore_content.splitlines():
+        line = line.strip()
+        if line and not line.startswith('#'):
+            patterns.add(line)
+    return patterns
+
+
 def get_project_context():
     """
-    Scans the repository to build a concise context for the AI.
-    This is the key to avoiding token limits.
+    Scans the repository to build a concise context for the AI,
+    respecting .gitignore rules.
     """
     context = []
-    ignore_dirs = {'.git', '__pycache__', 'node_modules', '.venv', 'venv', 'dist', 'build'}
-    ignore_files = {'LICENSE', 'README.md'}
     
-    for root, dirs, files in os.walk("."):
-        # Remove ignored directories from traversal
-        dirs[:] = [d for d in dirs if d not in ignore_dirs]
+    ignore_patterns = _parse_gitignore(PYTHON_GITIGNORE_TEMPLATE)
+    
+    # Load user's .gitignore if it exists
+    try:
+        with open('.gitignore', 'r') as f:
+            user_patterns = _parse_gitignore(f.read())
+            ignore_patterns.update(user_patterns)
+    except FileNotFoundError:
+        pass # It's okay if there's no .gitignore file
         
-        # Add directory structure
+    # Add some default essential ignores
+    ignore_patterns.update({'.git', 'LICENSE', 'README.md'})
+
+    for root, dirs, files in os.walk("."):
+        # Filter directories in place to prevent os.walk from traversing them
+        # Check against patterns like 'node_modules/' and 'dist'
+        dirs[:] = [
+            d for d in dirs
+            if not any(fnmatch.fnmatch(d, pattern.rstrip('/')) for pattern in ignore_patterns)
+        ]
+        
+        # Add directory structure to context
         relative_path = os.path.relpath(root, ".")
         if relative_path != ".":
             context.append(f"Directory: {relative_path.replace(os.sep, '/')}/")
 
         for file in files:
-            if file in ignore_files:
+            file_path = os.path.join(relative_path, file)
+            # Check if the file path matches any ignore pattern
+            if any(fnmatch.fnmatch(file_path, pattern) for pattern in ignore_patterns):
                 continue
 
-            file_path = os.path.join(root, file)
             # For key config files, add their full content
             if file == 'pyproject.toml':
-                with open(file_path, 'r') as f:
-                    context.append(f"\n--- Contents of {file} ---\n{f.read()}\n")
+                try:
+                    with open(os.path.join(root, file), 'r') as f:
+                        context.append(f"\n--- Contents of {file} ---\n{f.read()}\n")
+                except Exception:
+                    context.append(f"  - File: {file} (Could not read)")
             # For other files, just list them to show they exist
             else:
                 context.append(f"  - File: {file}")
@@ -204,7 +234,7 @@ def get_project_context():
 
 def generate_readme(user_prompt: str):
     """Generates a README.md file using the AI."""
-    print("🔎 Scanning project structure to build context...")
+    print("🔎 Scanning project structure (respecting .gitignore)...")
     project_context = get_project_context()
 
     prompt_parts = [
@@ -216,7 +246,7 @@ def generate_readme(user_prompt: str):
         "\n--- Project Context ---\n",
         project_context,
         "\n--- End of Context ---\n",
-        "Now, please generate the complete README.md file. Only return the raw Markdown content."
+        "Now, please generate the complete README.md file. Only return the raw Markdown content without any code fences like ```markdown."
     ]
     
     prompt = "\n".join(prompt_parts)
@@ -229,7 +259,8 @@ def generate_readme(user_prompt: str):
             model="gemini-2.5-flash-lite",
             contents=prompt
         )
-        readme_content = response.text.strip()
+        
+        readme_content = _strip_markdown_fences(response.text)
         
         with open("README.md", "w") as f:
             f.write(readme_content)
