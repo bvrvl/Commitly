@@ -1,11 +1,13 @@
 # DiffCraft
-> Craft the perfect git commit, instantly.
+> CLI co-pilot for Git and repository management
 
 [![PyPI version](https://badge.fury.io/py/diffcraft.svg)](https://badge.fury.io/py/diffcraft)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-purple?logo=github)](https://github.com/bvrvl/diffcraft)
 
-DiffCraft is a smart command-line tool that uses Google's Gemini to instantly generate high-quality, conventional commit messages from your staged code changes.
+DiffCraft is a smart command-line tool that uses Google's Gemini to streamline your development workflow. It started as a tool to craft the perfect git commit and has evolved into a powerful assistant for bootstrapping and managing your repository.
+- `craft`: Instantly generate high-quality, conventional commit messages from your code changes.
+- `gencraft`: Generate essential repository files like README.md, LICENSE, and .gitignore with AI assistance.
 
 Install:
 ```bash
@@ -13,11 +15,16 @@ pip install diffcraft
 ```
 
 ## Features:
-
-*   🤖 **AI-Powered Commits:** Analyzes your `git diff` to create meaningful and descriptive commit messages that truly reflect your changes.
-*   ✅ **Enforce Best Practices:** Automatically follows the [Conventional Commits](https://www.conventionalcommits.org/) standard, improving your project's readability and making it easier to automate releases.
-*   ⚙️ **You're Always in Control:** Interactively **[A]ccept** the suggestion, **[E]dit** it in your own editor, **[R]egenerate** a new one, or **[Q]uit**.
+`craft`: AI-Powered Commits
+*   🤖 **Intelligent Commit Generation:** Analyzes your `git diff` to create meaningful and descriptive commit messages that truly reflect your changes.
+*   ✅ **Conventional Commits Standard:** Automatically follows the [Conventional Commits](https://www.conventionalcommits.org/) standard, improving your project's readability and making it easier to automate releases.
+*   ⚙️ **Full User Control:** Interactively **[A]ccept** the suggestion, **[E]dit** it in your own editor, **[R]egenerate** a new one, or **[Q]uit**.
 *   🌍 **Flexible & Powerful:** Generate commits in different languages (`--lang`), provide context from your commit history (`--history`), and force specific types (`--type`).
+
+`gencraft`: AI-Powered Repository Scaffolding
+- 📄 **Smart README Generation:** Scans your project's file structure (respecting `.gitignore`) to create a comprehensive and well-structured `README.md` file automatically.
+- ⚖️ **License Generation:** Quickly generate a `LICENSE` file from a list of popular open-source licenses (MIT, Apache 2.0, GPLv3, and more) with your name and the current year.
+- 🙈 **`.gitignore` Creation:** Bootstrap a robust `.gitignore` file with sensible defaults for Python projects, and easily append your own custom rules.
 
 ## Installation
 
@@ -43,10 +50,7 @@ This method is easy and keeps your API key specific to your project.
 GEMINI_API_KEY="YOUR_API_KEY_HERE"
 ```
 🔒 Important Security Note
-Remember to add the .env file to your project's .gitignore to ensure your secret API key is never committed to your repository! If your .gitignore doesn't have it, add this line:
-```code
-.env
-```
+Remember to add `.env` file to ensure your secret API key is never committed to your repository!
 
 ### Method 2: Environment Variable (Advanced)
 
@@ -71,43 +75,65 @@ set GEMINI_API_KEY="YOUR_API_KEY_HERE"
 *For permanent setup on Windows, search for "Edit the system environment variables" in the Start Menu. You will need to close and reopen your terminal for the changes to take effect.*
 
 ## Usage
-The workflow is designed to be seamless.
+DiffCraft provides two primary commands: `craft` for commits and `gencraft` for file generation.
 
-1. Stage your files as you normally would:
-```Bash
-git add README.md
-git add .
-git add src/
-```
-2. Run the craft command:
-```Bash
+### Using `craft`
+The `craft` workflow is designed to be seamless
+1. Stage your files as you normally would: (`git add ...`)
+2. Run the `craft` command
+```bash
+# Generate a commit for already-staged changes
 craft
+
+# Stage all files and then generate a commit
+craft .
+
+# Stage specific files and generate a commit
+craft src/main.py
 ```
 This will generate a commit message and present you with the interactive prompt.
 
-Or,
+### `craft` Command-Line Options
 ```Bash
-craft README.md
-craft .
-craft src/
-```
-This will both stage the files and generate a commit message.
-### Command-Line Options
-For a full list of commands and detailed explanations, use the `--help` flag:
-```Bash
+# Generate a 'fix' commit and open it directly in your editor
+craft --type fix --edit
+
+# Generate a commit in Spanish using the last 3 commits for context
+craft --lang Spanish --history 3
+
+# For a full list of commands, use the --help flag
 craft --help
 ```
-**Example: Generate a 'fix' commit and edit it immediately**
-```Bash
-craft --type fix --edit
-```
-**Example: Generate a commit in Spanish using the last 3 commits for context**
-```Bash
-craft --lang Spanish --history 3
-```
+### Using `gencraft`
+The `gencraft` command helps you create essential project files.
+Generate a `.gitignore`
+```bash
+# Create a .gitignore with Python defaults
+gencraft gitignore
 
+# Add custom entries to the .gitignore
+gencraft gitignore node_modules/ .env.local
+```
+If a `.gitignore` already exists, gencraft will intelligently append new rules.
+### Generate a `LICENSE` file
+```bash
+# See a list of available licenses
+gencraft license
+
+# Generate an MIT license (will prompt for author name)
+gencraft license mit
+```
+### Generate a `README.md`
+```bash
+# Let the AI scan your project and generate a standard README
+gencraft readme
+
+# Provide the AI with a custom prompt for more specific results
+gencraft readme "A short and friendly one-paragraph readme"
+```
 ## Contributing
 Found a bug or have a feature request? We'd love your help! Please open an issue or submit a pull request on our [GitHub Repository](https://github.com/bvrvl/diffcraft)
 
+> Led and maintained by [@bvrvl](https://github.com/bvrvl/)
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
