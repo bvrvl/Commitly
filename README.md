@@ -75,7 +75,9 @@ The workflow is designed to be seamless.
 
 1. Stage your files as you normally would:
 ```Bash
+git add README.md
 git add .
+git add src/
 ```
 2. Run the craft command:
 ```Bash
@@ -85,7 +87,9 @@ This will generate a commit message and present you with the interactive prompt.
 
 Or,
 ```Bash
+craft README.md
 craft .
+craft src/
 ```
 This will both stage the files and generate a commit message.
 ### Command-Line Options
