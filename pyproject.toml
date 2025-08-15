@@ -21,7 +21,9 @@ classifiers = [
 dependencies = [
     "google-genai",
     "python-dotenv",
+    "requests",
 ]
 
 [project.scripts]
 craft = "diffcraft.cli:main"
+gencraft = "diffcraft.gencraft_cli:main"
