@@ -73,6 +73,7 @@ ENV/
 env.bak/
 venv.bak/
 # IDEs
+.DS_Store
 .idea/
 .vscode/
 # Development Scrap
