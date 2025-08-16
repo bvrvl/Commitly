@@ -75,6 +75,10 @@ venv.bak/
 # IDEs
 .idea/
 .vscode/
+# Development Scrap
+en.txt
+scrap.txt
+combined.txt
 """
 
 def generate_gitignore(user_files: list):
