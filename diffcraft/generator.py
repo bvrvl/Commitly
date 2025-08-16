@@ -21,8 +21,8 @@ POPULAR_LICENSES = {
     "unlicense": {"name": "The Unlicense", "keywords": "Public domain dedication, no restrictions."},
 }
 
-PYTHON_GITIGNORE_TEMPLATE = """
-# Byte-compiled / optimized / DLL files
+COMPREHENSIVE_GITIGNORE_TEMPLATE = """
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -72,10 +72,27 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-# IDEs
-.DS_Store
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+# IDEs & Editors
 .idea/
 .vscode/
+*.swp
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+.sublime-workspace
+# Operating System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 # Development Scrap
 en.txt
 scrap.txt
@@ -89,8 +106,9 @@ def generate_gitignore(user_files: list):
         with open(gitignore_path, 'r') as f:
             content = f.read()
         print("Found existing .gitignore. Appending new rules.")
-    if PYTHON_GITIGNORE_TEMPLATE.strip() not in content:
-        content += "\n" + PYTHON_GITIGNORE_TEMPLATE
+    # Use the new comprehensive template
+    if COMPREHENSIVE_GITIGNORE_TEMPLATE.strip() not in content:
+        content += "\n" + COMPREHENSIVE_GITIGNORE_TEMPLATE
     if user_files:
         user_section = "\n# User Added\n"
         if user_section.strip() not in content:
@@ -153,7 +171,8 @@ def _parse_gitignore(gitignore_content: str) -> set:
 
 def get_project_context():
     context = []
-    ignore_patterns = _parse_gitignore(PYTHON_GITIGNORE_TEMPLATE)
+    # Use the new comprehensive template here as well
+    ignore_patterns = _parse_gitignore(COMPREHENSIVE_GITIGNORE_TEMPLATE)
     try:
         with open('.gitignore', 'r') as f:
             user_patterns = _parse_gitignore(f.read())
