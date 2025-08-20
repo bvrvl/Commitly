@@ -106,7 +106,7 @@ craft --help
 ```
 ### Using `gencraft`
 The `gencraft` command helps you create essential project files.
-Generate a `.gitignore`
+### Generate a `.gitignore`
 ```bash
 # Create a .gitignore with Python defaults
 gencraft gitignore
